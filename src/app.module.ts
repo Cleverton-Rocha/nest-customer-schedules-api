@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
+import { SchedulesModule } from './schedules/schedules.module';
+import { Schedule } from './schedules/entities/schedule.entity';
 
 @Module({
   imports: [
@@ -11,9 +13,10 @@ import { User } from './user/entities/user.entity';
       type: 'sqlite',
       database: 'db/sql',
       synchronize: true,
-      entities: [User],
+      entities: [User, Schedule],
     }),
     UserModule,
+    SchedulesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
