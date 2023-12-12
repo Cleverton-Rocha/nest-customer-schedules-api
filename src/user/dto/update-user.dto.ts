@@ -20,10 +20,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MinLength(4)
   @MaxLength(20)
   @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/, {
-    message: `- Deve conter pelo menos um dígito OU um caractere especial.
-    - Não deve conter um ponto (.) ou uma quebra de linha.
-    - Deve ter pelo menos uma letra maiúscula.
-    - Deve ter pelo menos uma letra minúscula.`,
+    message: `Sua senha deve conter pelo menos um dígito ou um caractere especial, não deve conter um ponto (.) ou uma quebra de linha, deve ter pelo menos uma letra maiúscula, deve ter pelo menos uma letra minúscula.`,
   })
   password?: string;
 
