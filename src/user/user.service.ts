@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,11 +17,11 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User | object> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const isEmailUnique = await this.findByEmail(createUserDto.email);
 
     if (isEmailUnique) {
-      throw new Error('Email already in use');
+      throw new BadRequestException('Email already in use');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -35,7 +39,7 @@ export class UserService {
     });
 
     if (!users) {
-      throw new Error('Users not found');
+      throw new NotFoundException('Users not found');
     }
 
     return users;
@@ -45,26 +49,23 @@ export class UserService {
     const user = this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
     return user;
   }
 
-  async updateUser(
-    id: number,
-    newUserData: UpdateUserDto,
-  ): Promise<User | object> {
+  async updateUser(id: number, newUserData: UpdateUserDto): Promise<User> {
     const userToUpdate = await this.userRepository.findOne({ where: { id } });
 
     if (!userToUpdate) {
-      throw new Error('user not found');
+      throw new NotFoundException('user not found');
     }
 
     if ('email' in newUserData && userToUpdate.email !== newUserData.email) {
       const emailIsUnique = await this.findByEmail(newUserData.email);
       if (emailIsUnique) {
-        throw new Error('Email already in use.');
+        throw new BadRequestException('Email already in use.');
       }
     }
 
@@ -81,11 +82,11 @@ export class UserService {
     return userToUpdate;
   }
 
-  async deleteUser(id: number): Promise<User | object> {
+  async deleteUser(id: number): Promise<User> {
     const userToDelete = await this.userRepository.findOne({ where: { id } });
 
     if (!userToDelete) {
-      throw new Error('user not found');
+      throw new NotFoundException('user not found');
     }
 
     await this.userRepository.remove(userToDelete);
