@@ -40,6 +40,24 @@ export class SchedulesService {
     return schedule;
   }
 
+  async findByDay(day: string): Promise<Schedule> {
+    const schedule = await this.scheduleRepository.findOne({ where: { day } });
+    if (!schedule) {
+      throw new NotFoundException('Schedule not found.');
+    }
+
+    return schedule;
+  }
+
+  async findByHour(hour: string): Promise<Schedule> {
+    const schedule = await this.scheduleRepository.findOne({ where: { hour } });
+    if (!schedule) {
+      throw new NotFoundException('Schedule not found.');
+    }
+
+    return schedule;
+  }
+
   async updateSchedule(
     id: number,
     newData: UpdateScheduleDto,
