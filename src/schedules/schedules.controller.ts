@@ -26,9 +26,19 @@ export class SchedulesController {
     return await this.schedulesService.findAll();
   }
 
-  @Get('One/:id')
+  @Get('id/:id')
   async getOneSchedule(@Param('id') id: number): Promise<Schedule> {
     return await this.schedulesService.findOne(id);
+  }
+
+  @Get('day/:day')
+  async getByDay(@Param('day') day: string): Promise<Schedule> {
+    return await this.schedulesService.findByDay(day);
+  }
+
+  @Get('hour/:hour')
+  async getByHour(@Param('hour') hour: string): Promise<Schedule> {
+    return await this.schedulesService.findByHour(hour);
   }
 
   @Put('update/:id')
